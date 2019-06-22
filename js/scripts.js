@@ -28,8 +28,16 @@ function fetchUser(url) {
         .catch(err => console.log(err));ß
 }
 
-fetchUser('https://randomuser.me/api/')
-    .then(data => users.push(data))
+for (let i = 0; i < 12; i++) {
+    fetchUser('https://randomuser.me/api/')
+        .then(data => users.push(data))
+        .catch(Error('this user was invalid for some reason'));
+}
+
+
+
+
+console.log(users);
 
 let exampleUser = {
     cell: "(439)-778-4969",
