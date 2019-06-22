@@ -1,3 +1,36 @@
+const searchContainer = $('div .search-container');
+const gallery = $('#gallery');
+const birthdayRegex = /(\d\d\d\d)-(\d\d)-(\d\d)T\d\d:\d\d:\d\dZ/;
+const users = []
+
+// const user = data.results[0];
+// const userFirstName = user.name.first;
+// const userLastName = user.name.last;
+// const userEmail = user.email;
+// const userCity = user.location.city;
+// const userCellNumber = user.cell;
+// const userState = user.location.state;
+// const userZipCode = user.location.postcode;
+// const userStreet = user.location.street;
+// const userBirthday = birthdayRegex.exec(user.dob.date);
+// const userBirthDate = userBirthday[2];
+// const userBirthMonth = userBirthday[1];
+// const userBirthYear = userBirthday[0];
+// const userPicture = user.picture.large;
+
+console.log(searchContainer);
+console.log(gallery);
+
+
+function fetchUser(url) {
+    return fetch(url)
+        .then(response => response.json())
+        .catch(err => console.log(err));ß
+}
+
+fetchUser('https://randomuser.me/api/')
+    .then(data => users.push(data))
+
 let exampleUser = {
     cell: "(439)-778-4969",
     dob: {
