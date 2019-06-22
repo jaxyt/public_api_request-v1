@@ -3,20 +3,7 @@ const gallery = $('#gallery');
 const birthdayRegex = /(\d\d\d\d)-(\d\d)-(\d\d)T\d\d:\d\d:\d\dZ/;
 const users = []
 
-// const user = data.results[0];
-// const userFirstName = user.name.first;
-// const userLastName = user.name.last;
-// const userEmail = user.email;
-// const userCity = user.location.city;
-// const userCellNumber = user.cell;
-// const userState = user.location.state;
-// const userZipCode = user.location.postcode;
-// const userStreet = user.location.street;
-// const userBirthday = birthdayRegex.exec(user.dob.date);
-// const userBirthDate = userBirthday[2];
-// const userBirthMonth = userBirthday[1];
-// const userBirthYear = userBirthday[0];
-// const userPicture = user.picture.large;
+
 
 console.log(searchContainer);
 console.log(gallery);
@@ -25,15 +12,36 @@ console.log(gallery);
 function fetchUser(url) {
     return fetch(url)
         .then(response => response.json())
-        .catch(err => console.log(err));ß
+        .catch(err => console.log(err));
 }
 
 for (let i = 0; i < 12; i++) {
-    fetchUser('https://randomuser.me/api/')
-        .then(data => users.push(data))
-        .catch(Error('this user was invalid for some reason'));
+    users.push(fetchUser('https://randomuser.me/api/'));
 }
 
+Promise.all(users);
+
+console.log(users[0]);
+
+
+
+// for (let i = 0; i < users.length; i++) {
+//     const user = users[i];
+//     const user = data.results[0];
+//     const userFirstName = user.name.first;
+//     const userLastName = user.name.last;
+//     const userEmail = user.email;
+//     const userCity = user.location.city;
+//     const userCellNumber = user.cell;
+//     const userState = user.location.state;
+//     const userZipCode = user.location.postcode;
+//     const userStreet = user.location.street;
+//     const userBirthday = birthdayRegex.exec(user.dob.date);
+//     const userBirthDate = userBirthday[2];
+//     const userBirthMonth = userBirthday[1];
+//     const userBirthYear = userBirthday[0];
+//     const userPicture = user.picture.large;
+// }
 
 
 
