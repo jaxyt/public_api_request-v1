@@ -8,6 +8,14 @@
 	box-sizing: border-box;
 }
 
+html { 
+    background: url(../mockups/social-background-pic.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 html, body {
     width: 100%;
     max-width: 100%;
@@ -16,7 +24,7 @@ html, body {
 body {
     font-family: "Nunito", sans-serif;
     text-align: center;
-    background: rgba(235, 235, 235, 0.9);
+    background: rgba(235, 235, 235, 0);
 }
 
 header {
@@ -30,13 +38,16 @@ header {
 
 header h1 {
     font-size: 1.25em;
-    color: rgba(50, 50, 50, 0.9);
+    color: rgb(252, 250, 250);
     margin-top: 35px;
+    background-color: rgb(82, 78, 78);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .search-input {
     padding: 0.4rem 1rem;
-    border: 1px solid rgba(200, 200, 200, 0.9);
+    border: 1px solid rgb(200, 200, 200);
     border-radius: 0.25rem 0 0 0.25rem ;
     max-width: 20rem;
     transition: .4s ease-out;
@@ -50,7 +61,7 @@ header h1 {
 .search-submit {
     cursor: pointer;
     height: 33px;
-    background: rgba(245, 245, 245, 0.9);
+    background: rgb(245, 245, 245);
     border-radius: 0 0.25rem 0.25rem 0;
     border: 1px solid rgba(200, 200, 200, 0.9);
     transition: .4s ease-out;
@@ -87,7 +98,7 @@ header h1 {
     max-width: 360px;
     margin: 10px 10px 20px;
     padding: 10px;
-    background: rgba(245, 245, 245, 0.9);
+    background: rgb(245, 245, 245);
     border-radius: 0.25em;
     border: 1px solid rgba(50, 50, 50, 0.3);
     transition: .4s ease-out;
