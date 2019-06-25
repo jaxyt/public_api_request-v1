@@ -1,7 +1,7 @@
 const searchContainer = $('div .search-container');
 const gallery = $('#gallery');
-const birthdayRegex = /(\d\d\d\d)-(\d\d)-(\d\d)T\d\d:\d\d:\d\dZ/;
-const users = []
+const birthdayRegex = /(\d\d\d\d)-(\d\d)-(\d\d)/g;
+const users = [];
 
 
 
@@ -9,92 +9,161 @@ console.log(searchContainer);
 console.log(gallery);
 
 
-function fetchUser(url) {
-    return fetch(url)
-        .then(response => response.json())
-        .catch(err => console.log(err));
+function fetchUsers(url) {
+    for (let i = 0; i < 12; i++) {
+        fetch(url)
+        .then(checkStatus)
+        .then(response =>  response.json())
+        .then(data => data.results[0])
+        .then(filterUserInfo)
+        .then(user => {
+            userAddPreview(user);
+            userAddModal(user);
+        })
+        .catch(err => console.log(err)); 
+        
+    }
 }
 
-for (let i = 0; i < 12; i++) {
-    users.push(fetchUser('https://randomuser.me/api/'));
+function filterUserInfo(userInfo) {
+    const user = {};
+    const dateOfBirth = /(\d\d\d\d)-(\d\d)-(\d\d)/g.exec(userInfo.dob.date);
+    console.log(dateOfBirth);
+    user.id = `${userInfo.name.first}-${userInfo.name.last}`;
+    user.profilePicture = userInfo.picture.large;
+    user.first = userInfo.name.first;
+    user.last = userInfo.name.last;
+    user.email = userInfo.email;
+    user.city = userInfo.location.city;
+    user.state = userInfo.location.state
+    user.phoneNumber = userInfo.cell;
+    user.address = `${userInfo.location.street}, ${user.city}, ${user.state} ${userInfo.location.postcode}`;
+    user.birthday = `${dateOfBirth[2]}/${dateOfBirth[3]}/${dateOfBirth[1]}`;
+    users.push(user);
+    return user;
 }
 
-Promise.all(users);
+function userAddPreview(user) {
+    const htmlProfilePreview = `
+    <div class="card">
+        <div class="card-img-container">
+            <img class="card-img" src="${user.profilePicture}" alt="profile picture">
+        </div>
+        <div class="card-info-container">
+            <h3 id="${user.id}" class="card-name cap">${user.first} ${user.last}</h3>
+            <p class="card-text">${user.email}</p>
+            <p class="card-text cap">${user.city}, ${user.state}</p>
+        </div>
+    </div>`;
+    gallery.append(htmlProfilePreview);
+}
 
-console.log(users[0]);
+function userAddModal(user) {
+    const htmlProfileModal = `
+    <div class="modal-container">
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
+                <img class="modal-img" src="${user.profilePicture}" alt="profile picture">
+                <h3 id="${user.id}" class="modal-name cap">${user.first} ${user.last}</h3>
+                <p class="modal-text">${user.email}</p>
+                <p class="modal-text cap">${user.city}</p>
+                <hr>
+                <p class="modal-text">${user.cell}</p>
+                <p class="modal-text">${user.address}</p>
+                <p class="modal-text">Birthday: ${user.birthday}</p>
+            </div>
+        </div>
+    </div>`;
+}
 
 
 
-// for (let i = 0; i < users.length; i++) {
-//     const user = users[i];
-//     const user = data.results[0];
-//     const userFirstName = user.name.first;
-//     const userLastName = user.name.last;
-//     const userEmail = user.email;
-//     const userCity = user.location.city;
-//     const userCellNumber = user.cell;
-//     const userState = user.location.state;
-//     const userZipCode = user.location.postcode;
-//     const userStreet = user.location.street;
-//     const userBirthday = birthdayRegex.exec(user.dob.date);
-//     const userBirthDate = userBirthday[2];
-//     const userBirthMonth = userBirthday[1];
-//     const userBirthYear = userBirthday[0];
-//     const userPicture = user.picture.large;
-// }
+function checkStatus(response) {
+    if (response.ok) {
+        return Promise.resolve(response);
+    } else {
+        return Promise.reject(Error('checkStatus error: '));
+    }
+}
 
 
 
-console.log(users);
+// fetch('https://randomuser.me/api/')
+//         .then(checkStatus)
+//         .then(response => response.json())
+//         .then(data => console.log(data.results[0]))
+//         .catch(err => console.log(err));
+
+fetchUsers('https://randomuser.me/api/');
+
+gallery.on('click', (e)=>{
+    console.log(e);
+    console.log(e.target);
+    console.log(typeof e.target);
+    console.log(e.target.className);
+    console.log(e.target.id);
+})
 
 let exampleUser = {
-    cell: "(439)-778-4969",
-    dob: {
-        age: 60,
-        date: "1959-06-18T02:27:43Z"
-    },
-    email: "emma.peters@example.com",
-    gender: "female",
-    id: {
-        name: "SSN",
-        value: "461-03-7637"
-    },
-    location: {
-        city: "san antonio",
-        coordinates: {latitude: "85.5100", longitude: "175.5133"},
-        postcode: 27974,
-        state: "pennsylvania",
-        street: "7607 lovers ln",
-        timezone: {offset: "+3:00", description: "Baghdad, Riyadh, Moscow, St. Petersburg"}
-    },
-    login: {
-        md5: "fd5cd92ec61f8c41db926065557c44f5",
-        password: "dundee",
-        salt: "xUjhCKKF",
-        sha1: "2ca36c36b2eb40d3df23ee6672d499c8dd2b5d93",
-        sha256: "d20533ae518746302aeca7a7b9bbcc58944bf439e876c025380bc065e2b1dfd8",
-        username: "orangelion307",
-        uuid: "4ba8c7cb-36c2-4179-9858-934a95655f4b"
-    },
-    name: {
-        first: "emma",
-        last: "peters",
-        title: "mrs"
-    },
-    nat: "US",
-    phone: "(333)-392-7575",
-    picture: {
-        large: "https://randomuser.me/api/portraits/women/57.jpg",
-        medium: "https://randomuser.me/api/portraits/med/women/57.jpg",
-        thumbnail: "https://randomuser.me/api/portraits/thumb/women/57.jpg"
-    },
-    registered: {
-        age: 6,
-        date: "2013-05-09T23:45:19Z"
+    results:[
+        {
+            gender:"female",
+            name:{
+                title:"miss",
+                first:"karen",
+                last:"welch"
+            },
+            location:{
+                street:"2783 st. john’s road",
+                city:"carlisle",
+                state:"humberside",
+                postcode:"R60 5UH",
+                coordinates:{
+                    latitude:"6.2808",
+                    longitude:"51.6074"
+                },
+                timezone:{
+                    offset:"+6:00",
+                    description:"Almaty, Dhaka, Colombo"
+                }
+            },
+            email:"karen.welch@example.com",
+            login:{
+                uuid:"8f1c4c28-d954-469f-962c-7c27f2fdfbf0",
+                username:"smallladybug814",
+                password:"brandon1",
+                salt:"JvrAL8wy",
+                md5:"3205fd533c72c608d29a63f87a19c1db",
+                sha1:"42e74f00cde43ea6997731b35666d2d9b8a507e4",
+                sha256:"f04b504ee97844637b7d624d1d9cd6ee58cb56ba5bb0bd867b628e38087c0255"
+            },
+            dob:{
+                date:"1954-02-28T03:45:09Z",
+                age:65
+            },
+            registered:{
+                date:"2009-11-19T05:53:10Z",
+                age:9
+            },
+            phone:"017684 38465",
+            cell:"0740-788-756",
+            id:{
+                name:"NINO",
+                value:"MX 68 34 16 U"
+            },
+            picture:{
+                large:"https://randomuser.me/api/portraits/women/94.jpg",
+                medium:"https://randomuser.me/api/portraits/med/women/94.jpg",
+                thumbnail:"https://randomuser.me/api/portraits/thumb/women/94.jpg"
+            },
+            nat:"GB"
+        }
+    ],
+    info:{
+        seed:"f3c81485d5c913fc",
+        results:1,
+        page:1,
+        version:"1.2"
     }
-};
-
-fetch('https://randomuser.me/api/')
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+}
