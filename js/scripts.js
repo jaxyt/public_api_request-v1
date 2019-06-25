@@ -3,6 +3,11 @@ const gallery = $('#gallery');
 const birthdayRegex = /(\d\d\d\d)-(\d\d)-(\d\d)/g;
 const usersInfo = [];
 
+
+/**
+ * Takes a url, parses the JSON data and then filters the retrieved users properties, and lastly pushes them into the local array usersInfo 
+ * @param {String} url 
+ */
 async function getUsers(url) {
     const usersResponse = await fetch(url);
     const usersJSON = await usersResponse.json();
@@ -25,6 +30,11 @@ async function getUsers(url) {
     return Promise.all(users);
 }
 
+
+/**
+ * Creates a modal element using the given user's properties, then appends it to the body of the webpage and adds event listeners which allow the client to traverse the users within the modal interface, as well as close the modal whenever they wish
+ * @param {Object} user 
+ */
 function createModal(user) {
     const showModal = `
     <div class="modal-container">
@@ -85,16 +95,23 @@ function createModal(user) {
     
 }
 
-async function addToWebpage() {
-    const profiles = await getUsers('https://randomuser.me/api/?results=12');
+
+/**
+ * Executes all functions in an asynchronous manner, ensuring all promises generated from the given url are resolved
+ * @param {String} url 
+ */
+async function addToWebpage(url) {
+    const profiles = await getUsers(url);
     generateProfile(profiles);
     createSearchBar();
     filterSearchProfiles();
-    toggleModals();
     console.log(usersInfo);
 }
 
-
+/**
+ * Creates user profiles from the objects contained within the array passed in as an argument, then adds event listeners which opens a modal based on the user
+ * @param {Array} data 
+ */
 function generateProfile(data) {
     data.map(profile => {
         htmlPreview = `
@@ -127,6 +144,10 @@ function generateProfile(data) {
     }
 }
 
+
+/**
+ * Creates and appends a search bar
+ */
 function createSearchBar() {
     const htmlSearch = `
     <form action="#" method="get">
@@ -136,6 +157,9 @@ function createSearchBar() {
     searchContainer.append(htmlSearch);
 }
 
+/**
+ * Adds event listeners to the search bar, which dynamically search through the list of users and hide the ones that do not match the clients query
+ */
 function filterSearchProfiles() {
     $('#search-input').on('keyup',(e)=>{
         console.log(e.target.value);
@@ -164,10 +188,9 @@ function filterSearchProfiles() {
     })
 }
 
-function toggleModals() {
-    
-}
-
-addToWebpage();
+/**
+ * Calls all the functions
+ */
+addToWebpage('https://randomuser.me/api/?results=12');
 
 
