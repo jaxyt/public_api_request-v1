@@ -1,4 +1,4 @@
-const searchContainer = $('div .search-container');
+const searchContainer = $('div.search-container');
 const gallery = $('#gallery');
 const birthdayRegex = /(\d\d\d\d)-(\d\d)-(\d\d)/g;
 const usersInfo = [];
@@ -40,15 +40,58 @@ function createModal(user) {
                 <p class="modal-text">${user.address}</p>
                 <p class="modal-text">Birthday: ${user.birthday}</p>
             </div>
+            <button type="button" id="modal-btn-previous" class="modal-btn-toggle">Previous</button>
+            <button type="button" id="modal-btn-next" class="modal-btn-toggle">Next</button>
         </div>
     </div>
     `;
     $('body').append(showModal);
+
+    document.getElementById('modal-btn-previous').addEventListener('click', (e)=>{
+        for (let i = 0; i < usersInfo.length; i++) {
+            const currentUser = usersInfo[i];
+            if (currentUser.id === e.target.previousElementSibling.children[1].id) {
+                if (i > 0) {
+                    const previousUser = usersInfo[i-1];
+                    document.getElementById('modal-btn-previous').removeEventListener('click', MouseEvent);
+                    document.getElementById('modal-btn-next').removeEventListener('click', MouseEvent);
+                    document.querySelector('.modal-container').remove();
+                    createModal(previousUser);
+                    break;
+                }
+            }
+        }
+    });
+
+    document.getElementById('modal-btn-next').addEventListener('click', (e)=>{
+        for (let i = 0; i < usersInfo.length; i++) {
+            const currentUser = usersInfo[i];
+            if (currentUser.id === e.target.previousElementSibling.previousElementSibling.children[1].id) {
+                if (i < usersInfo.length - 1) {
+                    const nextUser = usersInfo[i+1];
+                    document.getElementById('modal-btn-previous').removeEventListener('click', MouseEvent);
+                    document.getElementById('modal-btn-next').removeEventListener('click', MouseEvent);
+                    document.querySelector('.modal-container').remove();
+                    createModal(nextUser);
+                    break;
+                }
+            }
+        }
+    });
+
+    document.getElementById('modal-close-btn').addEventListener('click', (e)=>{
+        document.querySelector('.modal-container').remove();
+    });
+    
 }
 
 async function addToWebpage() {
     const profiles = await getUsers('https://randomuser.me/api/?results=12');
     generateProfile(profiles);
+    createSearchBar();
+    filterSearchProfiles();
+    toggleModals();
+    console.log(usersInfo);
 }
 
 
@@ -77,9 +120,6 @@ function generateProfile(data) {
                 const modal = usersInfo[i];
                 if (name === modal.id) {
                     createModal(modal);
-                    document.getElementById('modal-close-btn').addEventListener('click', (e)=>{
-                        document.querySelector('.modal-container').remove();
-                    })
                     
                 } 
             }
@@ -87,6 +127,47 @@ function generateProfile(data) {
     }
 }
 
+function createSearchBar() {
+    const htmlSearch = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="serach-submit" class="search-submit">
+    </form>`;
+    searchContainer.append(htmlSearch);
+}
+
+function filterSearchProfiles() {
+    $('#search-input').on('keyup',(e)=>{
+        console.log(e.target.value);
+        let nameReg = new RegExp(e.target.value, 'gi');
+        for (let i = 0; i < document.getElementsByClassName('card').length; i++) {
+            const user = document.getElementsByClassName('card')[i];
+            if (nameReg.test(user.children[1].children[0].textContent)) {
+                user.style.display = '';
+            } else {
+                user.style.display = 'none';
+            }
+        }
+    });
+
+    $('#search-submit').on('click', (e)=>{
+        console.log(e.target.value);
+        let nameReg = new RegExp(e.target.value, 'gi');
+        for (let i = 0; i < document.getElementsByClassName('card').length; i++) {
+            const user = document.getElementsByClassName('card')[i];
+            if (nameReg.test(user.children[1].children[0].textContent)) {
+                user.style.display = '';
+            } else {
+                user.style.display = 'none';
+            }
+        }
+    })
+}
+
+function toggleModals() {
+    
+}
 
 addToWebpage();
+
 

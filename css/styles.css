@@ -151,11 +151,19 @@ header h1 {
     top: 15px;
     right: 15px;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(0, 0, 0, 0.8);
+    color: rgba(245, 238, 238, 0.9);
+    background: rgba(255, 0, 0, 0.87);
     outline: none;
     border-radius: 0.25em;
     border: 1px solid rgba(50, 50, 50, 0.3);
+}
+
+.modal-btn-toggle {
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    background: rgb(120, 209, 32);
+    border-radius: 20px;
+    padding: 10px;
 }
 
 .modal-img {
