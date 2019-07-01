@@ -191,6 +191,6 @@ function filterSearchProfiles() {
 /**
  * Calls all the functions
  */
-addToWebpage('https://randomuser.me/api/?results=12');
+addToWebpage('https://randomuser.me/api/?results=12&nat=au,br,us');
 
 
